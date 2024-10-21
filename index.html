@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Shopping Cart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li>Best match</li>
+                <li class="active">Best sellers</li>
+                <li>Newest</li>
+                <li>Best rated</li>
+                <li>Trending</li>
+                <li>Price</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <h1>Simple Shopping Cart</h1>
+
+            <!-- Dropdown for sorting products -->
+            <div class="sort-section">
+                <label for="sort-price">Sort by Price:</label>
+                <select id="sort-price" onchange="sortProducts()">
+                    <option value="default">Select</option>
+                    <option value="low-to-high">Low to High</option>
+                    <option value="high-to-low">High to Low</option>
+                </select>
+            </div>
+
+            <div class="products" id="product-list">
+                <div class="product" data-price="10">
+                    <img src="images/castlevania.jpg" alt="castlevania">
+                    <h2>castlevania</h2>
+                    <p>$10.00</p>
+                    <button onclick="addToCart('castlevania', 10, 'images/castlevania.jpg')">Add to Cart</button>
+                </div>
+                <div class="product" data-price="20">
+                    <img src="images/dragonquest.jpg" alt="dragonquest">
+                    <h2>dragonquest</h2>
+                    <p>$20.00</p>
+                    <button onclick="addToCart('dragonquest', 20, 'images/dragonquest.jpg')">Add to Cart</button>
+                </div>
+                <div class="product" data-price="30">
+                    <img src="images/farming.jpg" alt="farming">
+                    <h2>farming</h2>
+                    <p>$30.00</p>
+                    <button onclick="addToCart('farming', 30, 'images/farming.jpg')">Add to Cart</button>
+                </div>
+                <div class="product" data-price="40">
+                    <img src="images/fifa.jpg" alt="fifa">
+                    <h2>fifa</h2>
+                    <p>$40.00</p>
+                    <button onclick="addToCart('fifa', 40, 'images/fifa.jpg')">Add to Cart</button>
+                </div>
+                <div class="product" data-price="50">
+                    <img src="images/GTA.jpeg" alt="GTA">
+                    <h2>GTA</h2>
+                    <p>$50.00</p>
+                    <button onclick="addToCart('GTA', 50, 'images/GTA.jpeg')">Add to Cart</button>
+                </div>
+                <div class="product" data-price="60">
+                    <img src="images/mk.jpeg" alt="mk">
+                    <h2>mk</h2>
+                    <p>$60.00</p>
+                    <button onclick="addToCart('mk', 60, 'images/mk.jpeg')">Add to Cart</button>
+                </div>
+                <div class="product" data-price="70">
+                    <img src="images/spiderman.jpeg" alt="spiderman">
+                    <h2>spiderman</h2>
+                    <p>$70.00</p>
+                    <button onclick="addToCart('spiderman', 70, 'images/spiderman.jpeg')">Add to Cart</button>
+                </div>
+                <div class="product" data-price="80">
+                    <img src="images/witcher3.jpg" alt="witcher3">
+                    <h2>witcher3</h2>
+                    <p>$80.00</p>
+                    <button onclick="addToCart('witcher3', 80, 'images/witcher3.jpg')">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="cart-section">
+                <h2>Your Cart</h2>
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <h3>Total: $<span id="total-price">0.00</span></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function sortProducts() {
+            const productList = document.getElementById('product-list');
+            const products = Array.from(productList.getElementsByClassName('product'));
+            const sortOption = document.getElementById('sort-price').value;
+
+            // Check if an option is selected
+            if (sortOption === "default") return;
+
+            products.sort((a, b) => {
+                const priceA = parseFloat(a.getAttribute('data-price'));
+                const priceB = parseFloat(b.getAttribute('data-price'));
+                
+                // Sorting logic
+                return sortOption === 'low-to-high' ? priceA - priceB : priceB - priceA;
+            });
+
+            // Clear the product list and re-add sorted products
+            productList.innerHTML = '';
+            products.forEach(product => productList.appendChild(product));
+        }
+    </script>
+</body>
+</html>
