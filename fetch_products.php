@@ -1,9 +1,13 @@
 <?php
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Database connection
 $servername = "localhost";
-$username = "root";
-$password = "Disha@123456";
-$dbname = "shopping_cart"; // Use your database name
+$username = "root";  // Default username
+$password = "";      // Default password is empty
+$dbname = "shopping_cart"; // Your database name
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -13,23 +17,33 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch data from products table
-$sql = "SELECT id, name, price, image FROM products";
-$result = $conn->query($sql);
+// Function to get products as JSON
+function getProductsAsJson($conn) {
+    $sql = "SELECT id, name, price, image FROM products";
+    $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
-    // Output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "<div class='product' data-price='" . $row["price"] . "'>";
-        echo "<img src='" . $row["image"] . "' alt='" . $row["name"] . "'>";
-        echo "<h2>" . $row["name"] . "</h2>";
-        echo "<p>$" . $row["price"] . "</p>";
-        echo "<button onclick=\"addToCart('" . $row["name"] . "', " . $row["price"] . ", '" . $row["image"] . "')\">Add to Cart</button>";
-        echo "</div>";
+    $products = array();
+
+    if ($result->num_rows > 0) {
+        // Add each row to the products array
+        while($row = $result->fetch_assoc()) {
+            $products[] = array(
+                "id" => $row["id"],
+                "name" => $row["name"],
+                "price" => $row["price"],
+                "image" => $row["image"]
+            );
+        }
+    } else {
+        return json_encode(array("message" => "0 results"));
     }
-} else {
-    echo "0 results";
+
+    // Return the JSON-encoded products array
+    return json_encode($products);
 }
+
+// Call the function and echo the JSON data
+echo getProductsAsJson($conn);
 
 $conn->close();
 ?>
